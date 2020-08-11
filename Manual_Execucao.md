@@ -1,5 +1,3 @@
-# EntregameYA-API
-
 ## How to run project locally
 ```
 FIRST
