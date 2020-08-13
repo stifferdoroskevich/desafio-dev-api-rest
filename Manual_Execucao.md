@@ -17,7 +17,7 @@ python3 server.py
 ```
 
 ## API Documentation
-https://documenter.getpostman.com/view/12331490/T1LLE7rp?version=latest
+https://bit.ly/documentacao_dock
 
 ## Verification of Data:
 * URL: 127.0.0.1:5000/pessoas
