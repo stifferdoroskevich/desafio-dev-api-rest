@@ -4,6 +4,14 @@ from werkzeug.exceptions import HTTPException
 from api.models.db_creation import Contas, Transacoes, Pessoas
 
 
+def valida_status_conta(id):
+    conta = Contas.query.get(id)
+
+    if conta.flag_ativo:
+        return True
+    raise ce.InvalidUsage("Conta {} está inativa.".format(id))
+
+
 @app.route('/')
 def home():
     return "Welcome to DOCK!"
@@ -111,6 +119,7 @@ def deposito():
         raise ce.InvalidUsage(ce.msg_params_invalid)
     if not conta:
         raise ce.InvalidUsage("Conta {} nao existente".format(id_conta))
+    # valida_status_conta(id)
     valor = request.json['valor']
     if valor < 0:
         raise ce.InvalidUsage("Valor {} negativo. ".format(valor) + ce.msg_params_invalid)
@@ -134,6 +143,7 @@ def saque():
     conta = Contas.query.get(id_conta)
     if not conta:
         raise ce.InvalidUsage("Conta {} nao existente".format(id_conta))
+    # valida_status_conta(id_conta)
     if valor < 0:
         raise ce.InvalidUsage("Valor {} negativo. ".format(valor) + ce.msg_params_invalid)
     if valor > conta.saldo:
@@ -156,7 +166,6 @@ def saque():
 def get_extrato_conta(id):
     if not Contas.query.get(id):
         raise ce.InvalidUsage("Conta {} nao encontrada".format(id))
-
     filter_list = [Transacoes.id_conta == id]
     if request.json:
         try:
@@ -168,6 +177,25 @@ def get_extrato_conta(id):
                 {"message": ce.msg_params_invalid}), 403
 
     extratos = Transacoes.query.filter(*filter_list)
+
+    resumo_extrato = {}
+    for extrato in extratos:
+        resumo_extrato[extrato.id_transacao] = {extrato.id_conta: {
+            "idConta": extrato.id_conta,
+            "idTransacao": extrato.id_transacao,
+            "valor": extrato.valor,
+            "dataTransacao": extrato.data_transacao
+        }
+    }
+    if resumo_extrato == {}:
+        return jsonify({"message": "Transacoes nao encontradas nesse periodo."})
+    return jsonify(resumo_extrato)
+
+
+# Path somente para debug
+@app.route('/transacao/extrato', methods=['GET'])
+def get_extrato_todos():
+    extratos = Transacoes.query.all()
 
     resumo_extrato = {}
     for extrato in extratos:
