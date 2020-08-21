@@ -18,7 +18,7 @@ class Contas(db.Model):
     id_conta = db.Column(db.Integer, primary_key=True)
     id_pessoa = db.Column(db.Integer, db.ForeignKey('pessoas.id_pessoa'), nullable=False)
     saldo = db.Column(db.Float(precision=2), nullable=False)  # monetario - limitar negativo ? deposito negativo
-    limite_saque_diario = db.Column(db.Float(precision=2))  # monetario - limitar negativo ?
+    limite_saque_diario = db.Column(db.Float(precision=2), nullable=False)  # monetario - limitar negativo ?
     flag_ativo = db.Column(db.Boolean, default=True)
     tipo_conta = db.Column(db.Integer, nullable=False)
     data_criacao = db.Column(db.DateTime,  server_default=sqlalchemy.sql.func.now())
