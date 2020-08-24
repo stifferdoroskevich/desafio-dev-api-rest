@@ -4,7 +4,7 @@ from flask_marshmallow import Marshmallow
 
 
 app = Flask(__name__)
-app.config.from_object('api.config.TestingConfig')
+app.config.from_object('config.TestingConfig')
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)

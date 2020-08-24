@@ -11,7 +11,7 @@ class DevelopmentConfig(Config):
 
 
 class TestingConfig(Config):
-    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:dockdock@18.228.173.104:5444/postgres"
+    SQLALCHEMY_DATABASE_URI = ""
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = True
     TESTING = True
